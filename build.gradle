@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'com.minequest.minecraft'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-csv:1.9.0'
+    implementation 'mysql:mysql-connector-java:8.0.29'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.minequest.minecraft.Bootstrap'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
