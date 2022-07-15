@@ -20,11 +20,7 @@ public class FileParser {
     public Iterable<CSVRecord> parseFile() {
         File file = new File(PATH + File.separator + FILE_NAME);
 
-        System.out.println(file.getName());
-        System.out.println(file.getAbsolutePath());
-
-
-        if (file == null || !file.exists()) {
+        if (!file.exists()) {
             System.out.println("File ist null");
             return null;
         }

@@ -10,12 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by YannicK S. on 14.07.2022
  */
 public class Bootstrap {
-
 
     /**
      * It creates a table called custom_heads if it doesn't already exist
@@ -35,6 +35,8 @@ public class Bootstrap {
      * @param heads The list of CustomHeads you want to insert into the database.
      */
     private static void insertCustomHeadsToDatabase(List<CustomHead> heads) {
+        AtomicInteger i = new AtomicInteger(1);
+
         heads.forEach(customHead -> {
             try (Connection connection = dataSource().getConnection(); PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO custom_heads(id,category,texture_url, name ) VALUES (?,?,?,?);")) {
@@ -44,10 +46,13 @@ public class Bootstrap {
                 statement.setString(3, customHead.skin);
                 statement.setString(4, customHead.name);
                 statement.execute();
+                i.getAndIncrement();
             } catch (SQLException throwable) {
                 throwable.printStackTrace();
             }
         });
+
+        System.out.println("Successfully loaded " + i.get() + " skins into the database");
     }
 
     /**
@@ -59,7 +64,7 @@ public class Bootstrap {
         parser.parseFile().forEach(record -> heads.add(new CustomHead(record.get("category"),
                 record.get("skin"),
                 Long.parseLong(record.get("id")),
-                record.get("name"))));
+                record.get("displayname"))));
 
         createTableIfNotExists();
         insertCustomHeadsToDatabase(heads);
